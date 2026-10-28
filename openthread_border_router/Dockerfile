@@ -1,9 +1,11 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:trixie
+# Base image updated by Renovate, update versionCompatibility on Debian base bump
+ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:trixie-2026.10.3@sha256:a9fb29d0ffab1a81d6379e6252db21e0edbd1263c94d9de2cfc54a396aad8611
 
 # OTBR builder stage (beta)
 FROM ${BUILD_FROM} AS otbr-beta-builder
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# ot-br-posix v2026.10.0
 ARG OTBR_BETA_VERSION=cb4bdae242b22287cded07ae3aa10347c2d16d9b
 
 ENV BORDER_ROUTING=1
@@ -89,6 +91,7 @@ RUN \
 FROM ${BUILD_FROM} AS otbr-stable-builder
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# ot-br-posix v2026.09.0
 ARG OTBR_VERSION=fd872ab9d4afdfaf034b3b1154fed08b8b6d1e43
 
 ENV BORDER_ROUTING=1

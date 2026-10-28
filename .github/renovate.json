@@ -1,0 +1,92 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["dockerfile", "github-actions", "custom.regex"],
+  "semanticCommits": "disabled",
+  "labels": ["dependencies"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "OTBR beta in the Dockerfile",
+      "managerFilePatterns": ["/^openthread_border_router/Dockerfile$/"],
+      "matchStrings": [
+        "# ot-br-posix (?<currentValue>\\S+)\\nARG OTBR_BETA_VERSION=(?<currentDigest>[0-9a-f]{40})"
+      ],
+      "depNameTemplate": "OTBR beta",
+      "packageNameTemplate": "openthread/ot-br-posix",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "customType": "regex",
+      "description": "OTBR stable in the Dockerfile",
+      "managerFilePatterns": ["/^openthread_border_router/Dockerfile$/"],
+      "matchStrings": [
+        "# ot-br-posix (?<currentValue>\\S+)\\nARG OTBR_VERSION=(?<currentDigest>[0-9a-f]{40})"
+      ],
+      "depNameTemplate": "OTBR stable",
+      "packageNameTemplate": "openthread/ot-br-posix",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "customType": "regex",
+      "description": "serialx in the Dockerfile",
+      "managerFilePatterns": ["/^openthread_border_router/Dockerfile$/"],
+      "matchStrings": ["ARG SERIALX_VERSION=(?<currentValue>\\S+)"],
+      "depNameTemplate": "serialx",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "universal-silabs-flasher in the Dockerfile",
+      "managerFilePatterns": ["/^openthread_border_router/Dockerfile$/"],
+      "matchStrings": [
+        "ARG UNIVERSAL_SILABS_FLASHER_VERSION=(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "universal-silabs-flasher",
+      "datasourceTemplate": "pypi"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/home-assistant/base-debian"],
+      "versionCompatibility": "^trixie-(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "pep440",
+      "sourceUrl": "https://github.com/home-assistant/docker-base",
+      "groupName": "docker-base",
+      "commitMessageTopic": "home-assistant/base-debian image",
+      "commitMessageExtra": "to {{newValue}}"
+    },
+    {
+      "description": "Dockerfile ARGs pin image components, so title their PRs \"Update <name> to <version>\"",
+      "matchManagers": ["custom.regex"],
+      "commitMessageTopic": "{{depName}}"
+    },
+    {
+      "description": "OTBR stable follows beta after testing, so open its PRs only on approval in the Dependency Dashboard",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["OTBR stable"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "GitHub Actions: weekly with a 7 day cooldown, like Dependabot did",
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"],
+      "schedule": ["before 8am on monday"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Leave runner labels and action version inputs alone, Dependabot never updated those",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["github-runner", "uses-with"],
+      "enabled": false
+    },
+    {
+      "description": "Our own actions that follow a branch (like home-assistant/actions@master) float on purpose. Pinning them would open a digest PR in every repository for each change to them. Our own actions on a version tag are pinned like any other.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["home-assistant/**"],
+      "matchCurrentValue": "/^(dev|main|master)$/",
+      "pinDigests": false
+    }
+  ]
+}
