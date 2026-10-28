@@ -23,6 +23,7 @@ devices:
   - /dev/net/tun
 image: ghcr.io/home-assistant/app-openthread-border-router
 init: false
+log_format: timestamp
 options:
   device: null
   baudrate: "460800"
