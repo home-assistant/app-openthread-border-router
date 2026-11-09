@@ -4,17 +4,21 @@
 # Configure OTBR depending on app settings
 # ==============================================================================
 
-# Run an ot-ctl command quietly; log its output as a warning if it fails.
-# ot-ctl exits 0 even when the CLI reports "Error <n>: ...", so success is
-# determined by the final "Done" line. Failures are intentionally non-fatal.
+# Run an ot-ctl command quietly, only logging its output on failure.
+# A non-zero exit (e.g. otbr-agent not reachable) is fatal via errexit.
+# ot-ctl exits 0 even when the CLI reports "Error <n>: ...", such CLI errors
+# are detected by the missing final "Done" line and are only logged.
 function otctl() {
     local output
 
-    if output="$(ot-ctl "$@" 2>&1)" && [[ "${output//[[:space:]]/}" == *Done ]]; then
-        return 0
+    if ! output="$(ot-ctl "$@" 2>&1)"; then
+        bashio::log.error "ot-ctl $* failed: ${output}"
+        return 1
     fi
 
-    bashio::log.warning "ot-ctl $* failed: ${output}"
+    if [[ "${output//[[:space:]]/}" != *Done ]]; then
+        bashio::log.warning "ot-ctl $* failed: ${output}"
+    fi
 }
 
 otctl trel enable
