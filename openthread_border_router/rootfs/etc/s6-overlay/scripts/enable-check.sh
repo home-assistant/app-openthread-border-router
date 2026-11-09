@@ -21,7 +21,7 @@ beta_active=false
 if bashio::config.true 'beta'; then
     if (( marker_version < beta_auto_disable_version )); then
         bashio::log.warning "Disabling beta mode automatically; the previous beta is now stable."
-        bashio::addon.option 'beta' '^false'
+        bashio::app.option 'beta' '^false'
     else
         beta_active=true
     fi
@@ -46,8 +46,8 @@ fi
 # Disable OTBR Web if necessary ports are not exposed
 # ==============================================================================
 
-if bashio::var.has_value "$(bashio::addon.port 8080)" \
-     && bashio::var.has_value "$(bashio::addon.port 8081)"; then
+if bashio::var.has_value "$(bashio::app.port 8080)" \
+     && bashio::var.has_value "$(bashio::app.port 8081)"; then
     bashio::log.info "Web UI and REST API port are exposed, starting otbr-web."
 else
     rm /etc/s6-overlay/s6-rc.d/user/contents.d/otbr-web
