@@ -91,8 +91,8 @@ RUN \
 FROM ${BUILD_FROM} AS otbr-stable-builder
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# ot-br-posix v2026.09.0
-ARG OTBR_VERSION=fd872ab9d4afdfaf034b3b1154fed08b8b6d1e43
+# ot-br-posix v2026.10.0
+ARG OTBR_VERSION=cb4bdae242b22287cded07ae3aa10347c2d16d9b
 
 ENV BORDER_ROUTING=1
 ENV BACKBONE_ROUTER=1
