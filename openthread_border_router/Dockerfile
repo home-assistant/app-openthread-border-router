@@ -211,6 +211,7 @@ COPY --from=otbr-stable-builder /opt/otbr-stable /opt/otbr-stable
 COPY rootfs /
 
 ENV \
+    LOG_FORMAT="{LEVEL}: {MESSAGE}" \
     S6_STAGE2_HOOK=/etc/s6-overlay/scripts/enable-check.sh
 
 LABEL \
