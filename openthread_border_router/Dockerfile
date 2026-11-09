@@ -5,8 +5,8 @@ ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:trixie-2026.11.0@sha256:d996c8
 FROM ${BUILD_FROM} AS otbr-beta-builder
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# ot-br-posix v2026.10.0
-ARG OTBR_BETA_VERSION=cb4bdae242b22287cded07ae3aa10347c2d16d9b
+# ot-br-posix v2026.11.0
+ARG OTBR_BETA_VERSION=76fb21d666a41050b43f8eaabc30e71d9d75d9fd
 
 ENV BORDER_ROUTING=1
 ENV BACKBONE_ROUTER=1
