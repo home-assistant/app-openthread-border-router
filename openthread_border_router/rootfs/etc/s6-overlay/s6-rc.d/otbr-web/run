@@ -11,7 +11,7 @@ bashio::log.info "Starting otbr-web..."
 declare otbr_web_port
 declare otbr_log_level_int
 
-otbr_web_port="$(bashio::addon.port 8080)"
+otbr_web_port="$(bashio::app.port 8080)"
 otbr_log_level_int="$(otbr_log_level_to_int)" \
     || bashio::exit.nok "Unknown otbr_log_level: $(bashio::config otbr_log_level)"
 

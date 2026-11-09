@@ -19,7 +19,7 @@ declare otbr_rest_listen_port
 
 # Cleanup unused configs
 if bashio::config.exists 'autoflash_firmware'; then
-    bashio::addon.option 'autoflash_firmware'
+    bashio::app.option 'autoflash_firmware'
 fi
 
 backbone_if=""
@@ -112,11 +112,11 @@ if bashio::config.true 'nat64'; then
 fi
 
 otbr_rest_listen="::"
-otbr_rest_listen_port="$(bashio::addon.port 8081)"
+otbr_rest_listen_port="$(bashio::app.port 8081)"
 
 # If user port is not set, listen on local interface only
 if ! bashio::var.has_value "${otbr_rest_listen_port}"; then
-    otbr_rest_listen="$(bashio::addon.ip_address)"
+    otbr_rest_listen="$(bashio::app.ip_address)"
     otbr_rest_listen_port="8081"
 elif [ "${otbr_rest_listen_port}" != "8081" ]; then
     bashio::log.warning "Custom OpenThread REST API port is not supported. Using 8081."
