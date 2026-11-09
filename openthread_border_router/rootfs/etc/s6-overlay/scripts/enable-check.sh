@@ -50,7 +50,7 @@ if bashio::var.has_value "$(bashio::app.port 8080)" \
      && bashio::var.has_value "$(bashio::app.port 8081)"; then
     bashio::log.info "Web UI and REST API port are exposed, starting otbr-web."
 else
-    rm /etc/s6-overlay/s6-rc.d/user/contents.d/otbr-web
+    rm /etc/s6-overlay/user-bundles.d/user/contents.d/otbr-web
     bashio::log.info "The otbr-web is disabled."
 fi
 
@@ -59,7 +59,7 @@ fi
 # ==============================================================================
 
 if bashio::config.has_value 'network_device'; then
-    touch /etc/s6-overlay/s6-rc.d/user/contents.d/socat-otbr-tcp
+    touch /etc/s6-overlay/user-bundles.d/user/contents.d/socat-otbr-tcp
     touch /etc/s6-overlay/s6-rc.d/otbr-agent/dependencies.d/socat-otbr-tcp
     bashio::log.info "Enabled socat-otbr-tcp."
 fi
