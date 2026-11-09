@@ -175,7 +175,7 @@ RUN \
 FROM ${BUILD_FROM}
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ARG SERIALX_VERSION=1.8.0
+ARG SERIALX_VERSION=1.15.1
 ARG UNIVERSAL_SILABS_FLASHER_VERSION=0.1.3
 
 # Install runtime dependencies
