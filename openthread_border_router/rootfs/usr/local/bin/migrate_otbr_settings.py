@@ -1,6 +1,7 @@
 import asyncio
 import argparse
 import datetime
+import logging
 import re
 import serialx
 from pathlib import Path
@@ -225,9 +226,10 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    import coloredlogs
-
-    # The Supervisor adds timestamps to the app logs, so drop the timestamp (and
-    # the container hostname/PID) from the default coloredlogs format.
-    coloredlogs.install(level="DEBUG", fmt="%(name)s %(levelname)s %(message)s")
+    # The Supervisor adds timestamps to the app logs, so leave the timestamp out
+    # of the log format.
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(name)s %(levelname)s %(message)s",
+    )
     asyncio.run(main())
