@@ -37,12 +37,10 @@
     },
     {
       "customType": "regex",
-      "description": "universal-silabs-flasher in the Dockerfile",
+      "description": "aiospinel in the Dockerfile",
       "managerFilePatterns": ["/^openthread_border_router/Dockerfile$/"],
-      "matchStrings": [
-        "ARG UNIVERSAL_SILABS_FLASHER_VERSION=(?<currentValue>\\S+)"
-      ],
-      "depNameTemplate": "universal-silabs-flasher",
+      "matchStrings": ["ARG AIOSPINEL_VERSION=(?<currentValue>\\S+)"],
+      "depNameTemplate": "aiospinel",
       "datasourceTemplate": "pypi"
     }
   ],
