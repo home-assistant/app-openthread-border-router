@@ -5,11 +5,29 @@ declare thread_if
 declare otbr_forward_ingress_chain
 declare otbr_forward_egress_chain
 declare otbr_forward_nat64_chain
+declare otbr_ra_chain
 declare otbr_fw_mark
 thread_if="wpan0"
 otbr_forward_ingress_chain="OTBR_FORWARD_INGRESS"
 otbr_forward_egress_chain="OTBR_FORWARD_EGRESS"
 otbr_forward_nat64_chain="OTBR_FORWARD_NAT64"
+otbr_ra_chain="OTBR_RA_EGRESS"
+
+# Removes an ip6tables chain and every jump to it from a hook chain.
+# Tolerates absence, so it works both as a teardown on stop and as a
+# leftover recovery on start (after a hard container kill the rules stay
+# in the host network namespace, since the app runs with host_network).
+otbr_remove_ip6_chain() {
+    local hook="${1}"
+    local chain="${2}"
+    while ip6tables -w -C "${hook}" -j "${chain}" 2>/dev/null; do
+        ip6tables -w -D "${hook}" -j "${chain}"
+    done
+    if ip6tables -w -L "${chain}" -n 2>/dev/null; then
+        ip6tables -w -F "${chain}"
+        ip6tables -w -X "${chain}"
+    fi
+}
 otbr_fw_mark="0x1001"
 
 # Map the configured otbr_log_level to the numeric level expected by the

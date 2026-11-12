@@ -94,6 +94,24 @@ else
     ip6tables -A "${otbr_forward_egress_chain}" -j ACCEPT
 fi
 
+# Router Advertisement egress filter (#17). Present only when enabled,
+# so the default configuration adds no rule and no hop. The guarded jump
+# insert prevents duplicate OUTPUT jumps when the previous stop was a
+# hard kill and the finish script never ran. The enabled branch recovers
+# leftovers, rebuilding on each start so the filter survives reboots.
+if bashio::config.false 'router_advertisements'; then
+    bashio::log.info "Filtering infra-side Router Advertisements on ${backbone_if}."
+    ip6tables -w -N "${otbr_ra_chain}" 2>/dev/null || true
+    ip6tables -w -F "${otbr_ra_chain}" 2>/dev/null || true
+    if ! ip6tables -w -C OUTPUT -j "${otbr_ra_chain}" 2>/dev/null; then
+        ip6tables -w -I OUTPUT 1 -j "${otbr_ra_chain}"
+    fi
+    ip6tables -w -A "${otbr_ra_chain}" -o "${backbone_if}" -p ipv6-icmp \
+        -m icmp6 --icmpv6-type router-advertisement -j DROP
+else
+    otbr_remove_ip6_chain OUTPUT "${otbr_ra_chain}"
+fi
+
 if bashio::config.true 'nat64'; then
     # Mark Thread traffic in mangle
     iptables -t mangle -A PREROUTING -i "${thread_if}" -j MARK --set-mark "${otbr_fw_mark}"

@@ -51,6 +51,9 @@ if ip6tables -L "${otbr_forward_egress_chain}" 2> /dev/null; then
     ip6tables -w -X "${otbr_forward_egress_chain}"
 fi
 
+# Remove the Router Advertisement egress filter
+otbr_remove_ip6_chain OUTPUT "${otbr_ra_chain}"
+
 # Remove FORWARD jump(s)
 while iptables -C FORWARD -j "${otbr_forward_nat64_chain}" 2>/dev/null; do
     iptables -D FORWARD -j "${otbr_forward_nat64_chain}"
