@@ -34,6 +34,17 @@ configuration:
     description: >-
       Enable IPv6 to IPv4 network address translation. This allows Thread
       devices to communicate with devices on the Internet.
+  router_advertisements:
+    name: Router Advertisements
+    description: >-
+      Send Router Advertisements with the Thread network route on the LAN.
+      Turn off when another IPv6 router already serves the LAN and no other
+      device, such as a third-party Matter hub, needs direct access to
+      Thread devices. Home Assistant and Matter through Home Assistant keep
+      working; other devices on the LAN just do not learn the route. The
+      filter stops every Router Advertisement this host sends on the LAN
+      interface, so the other IPv6 router must not run on this same
+      host.
   beta:
     name: Beta
     description: >-

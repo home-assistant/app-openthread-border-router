@@ -31,6 +31,7 @@ options:
   otbr_log_level: notice
   firewall: true
   nat64: false
+  router_advertisements: true
   beta: false
 ports:
   8080/tcp: null
@@ -47,5 +48,6 @@ schema:
   otbr_log_level: list(debug|info|notice|warning|error|critical|alert|emergency)
   firewall: bool
   nat64: bool
+  router_advertisements: bool
   beta: bool?
 startup: services
