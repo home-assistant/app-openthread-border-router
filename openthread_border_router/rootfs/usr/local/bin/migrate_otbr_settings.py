@@ -1,13 +1,14 @@
 import asyncio
 import argparse
 import datetime
+import logging
 import re
-import zigpy.serial
+import serialx
 from pathlib import Path
 from serialx import PinState
 
 from enum import Enum
-from universal_silabs_flasher.spinel import (
+from aiospinel import (
     SpinelProtocol,
     CommandID,
     PropertyID,
@@ -82,18 +83,21 @@ async def get_adapter_hardware_addr(
 ) -> str:
     loop = asyncio.get_running_loop()
 
+    # OTBR uses `uart-init-deassert` when flow control is disabled
+    pin_on_open = PinState.HIGH if flow_control == "hardware" else PinState.LOW
+
     async with asyncio.timeout(CONNECT_TIMEOUT):
-        _, protocol = await zigpy.serial.create_serial_connection(
+        _, protocol = await serialx.create_serial_connection(
             loop=loop,
             protocol_factory=SpinelProtocol,
             url=port,
             baudrate=baudrate,
-            flow_control=flow_control,
-            # OTBR uses `uart-init-deassert` when flow control is disabled
-            rtsdtr_on_open=(
-                PinState.HIGH if flow_control == "hardware" else PinState.LOW
-            ),
-            rtsdtr_on_close=PinState.LOW,
+            xonxoff=flow_control == "software",
+            rtscts=flow_control == "hardware",
+            dtr_on_open=pin_on_open,
+            rts_on_open=pin_on_open,
+            dtr_on_close=PinState.LOW,
+            rts_on_close=PinState.LOW,
         )
         await protocol.wait_until_connected()
 
@@ -222,9 +226,10 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    import coloredlogs
-
-    # The Supervisor adds timestamps to the app logs, so drop the timestamp (and
-    # the container hostname/PID) from the default coloredlogs format.
-    coloredlogs.install(level="DEBUG", fmt="%(name)s %(levelname)s %(message)s")
+    # The Supervisor adds timestamps to the app logs, so leave the timestamp out
+    # of the log format.
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(name)s %(levelname)s %(message)s",
+    )
     asyncio.run(main())
