@@ -1,0 +1,44 @@
+---
+configuration:
+  device:
+    name: Uređaj
+    description: Serijski port na koji je povezan OpenThread RCP radio.
+  baudrate:
+    name: Brzina prenosa
+    description: >-
+      Brzina prenosa serijskog porta koja se koristi za komunikaciju sa Silicon Labs radijom.
+  flow_control:
+    name: Hardverska kontrola toka
+    description: Omogućava hardversku kontrolu toka za serijski port.
+  backbone_interface:
+    name: Mrežni interfejs okosnice
+    description: >-
+      Mrežni interfejs koji se koristi za mrežu okosnice.
+      Ako nije naveden, koristi se primarni interfejs.
+  network_device:
+    name: Mrežni uređaj
+    description: >-
+      <host:port> prilikom povezivanja sa uređajem putem soketa (ima prednost
+      nad gornjim podešavanjima). Ne preporučuje se! Pogledajte dokumentaciju za
+      više informacija.
+  otbr_log_level:
+    name: Nivo evidencije OpenThread Border Router agenta
+    description: >-
+      Podešava nivo beleženja događaja za OpenThread Border Router agenta (otbr-agent).
+  firewall:
+    name: OTBR zaštitni zid
+    description: >-
+      Koristi OpenThread Border Router zaštitni zid za blokiranje nepotrebnog saobraćaja.
+  nat64:
+    name: NAT64
+    description: >-
+      Omogućava prevođenje mrežnih adresa sa IPv6 na IPv4. Ovo omogućava Thread
+      uređajima da komuniciraju sa uređajima na internetu.
+  beta:
+    name: Beta
+    description: >-
+      Omogućava beta režim za pokretanje novije, eksperimentalne verzije OpenThread
+      Border Router-a.
+network:
+  8080/tcp: OpenThread veb port
+  8081/tcp: OpenThread REST API port
